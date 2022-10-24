@@ -10,7 +10,7 @@ using std::string;
 float converteSensor(int medida, int min, int max){
   float med = medida - min;
 	float intervalo = max - min;
-	float resultado = med/intervalo;
+	float resultado = (med/intervalo)*100;
 
   return resultado;
 }
@@ -57,8 +57,9 @@ int leComando()
 
 int insereVetor(int elemento, int valorMax, int lastPos, int* Vetor){
 	if (lastPos < valorMax-1){
-		int elem = elemento;
-		Vetor[lastPos+1] = elem;
+		int *vet = Vetor;
+		vet[lastPos] = elemento;
+		return (lastPos + 1);
 	}
  //caso o valor seja escrito em uma área de memória fora do vetor
 	else{
@@ -112,39 +113,40 @@ int insereVetor(int elemento, int valorMax, int lastPos, int* Vetor){
 // de maior distância ("Direita", "Esquerda", "Frente", "Tras") e a
 // segunda é esta maior distância.
 
-string dirMaiorDist(int* Vetor){
-  int maiordis = Vetor[0];
-  string dirmaior;
+char* dirMaiorDist(int* Vetor, int *maiordis){
+//   int *maiordis = Vetor[0];
+  char *dirmaior[20];
+  
   for (int i=0; i<4; i++){
-    if (Vetor[i] > maiordis){
-      maiordis = Vetor[i];
+    if (Vetor[i] > *maiordis){
+      *maiordis = Vetor[i];
     }
   }
 
-  if (maiordis == Vetor[0]){
-    dirmaior = "Direita";
+  if (*maiordis == Vetor[0]){
+    *dirmaior = "Direita";
   }
-    else if (maiordis == Vetor[1]){
-      dirmaior = "Esquerda";
+    else if (*maiordis == Vetor[1]){
+      *dirmaior = "Esquerda";
     }
-      else if (maiordis == Vetor[2]){
-        dirmaior = "Frente";
+      else if (*maiordis == Vetor[2]){
+        *dirmaior = "Frente";
       }
-        else if (maiordis == Vetor[3]){
-          dirmaior = "Tras";
+        else if (*maiordis == Vetor[3]){
+          *dirmaior = "Tras";
         }
-  return dirmaior;
+  return *dirmaior;
 }
 
-int maiorDist(int* Vetor){
-    int maiordis = Vetor[0];
-    for (int i=0; i<4; i++){
-      if (Vetor[i] > maiordis){
-        maiordis = Vetor[i];
-      }
-    }
-    return maiordis;
-}
+// int maiorDist(int* Vetor, int* maiordis){
+//     int* maiordis = Vetor[0];
+//     for (int i=0; i<4; i++){
+//       if (Vetor[i] > *maiordis){
+//         *maiordis = Vetor[i];
+//       }
+//     }
+//     return *maiordis;
+// }
 
 //testa o exercício 4
 // int main(){
@@ -181,14 +183,14 @@ int maiorDist(int* Vetor){
 // retorna verdadeiro ou falso
 
 int continuar(){
-	int parar = 0;
+	int parar=1;
 	cout << "Digite 1 para parar o mapeamento!" << endl;
   cin >> parar;
-	if (parar==1){
-    return 1;
+	if (parar==0){
+    return 0;
   }
   else{
-    return 0;
+    return 1;
   }
   
 }
@@ -198,7 +200,7 @@ int continuar(){
 // int main(){
 //   int parar = 0;
 //   while (parar == 0){
-//     parar = continuar();
+//     parar = continuar();6
 //   }
 //   //A função deve perguntar: "Digite 1 para parar o mapeamento!"
 //   //Se o usuário digitar 1, deve sair do loop while declarado acima
@@ -227,10 +229,13 @@ int dirige(int *v,int maxv){
 	int posAtualVetor = 0;
 	int dirigindo = 1;
 	while(dirigindo){
-		int medida = leComando();/// .. Chame a função de de leitura da medida para a "Direita"
-		medida = converteSensor(medida,0,830);
-		posAtualVetor = insereVetor(medida, maxVetor, posAtualVetor, vetorMov);// Chame a função para armazenar a medida no vetor
-        ///////////////////////////////////////////////////////////////////////////
+		for(int i=0; i<4; i++){
+			int medida = leComando();/// .. Chame a função de de leitura da medida para a "Direita"
+			medida = converteSensor(medida,0,830);
+			posAtualVetor = insereVetor(medida, maxVetor, posAtualVetor, vetorMov);// Chame a função para armazenar a medida no vetor
+        
+		}
+		///////////////////////////////////////////////////////////////////////////
     
 		// Repita as chamadas acima para a "Esquerda", "Frente", "Tras"
 		// ................
@@ -248,7 +253,7 @@ void percorre(int *v,int tamPercorrido){
 	int maiorDir = 0;
 
 	for(int i = 0; i< tamPercorrido; i+=4){
-		string direcao = dirMaiorDist(vetorMov);
+		char *direcao = dirMaiorDist(&(vetorMov[i]), &maiorDir);
 		printf("Movimentando para %s distancia = %i\n",direcao,maiorDir);
 	}
 }
