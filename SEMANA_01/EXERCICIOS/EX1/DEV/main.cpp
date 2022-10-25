@@ -184,7 +184,7 @@ char* dirMaiorDist(int* Vetor, int *maiordis){
 
 int continuar(){
 	int parar=1;
-	cout << "Digite 1 para parar o mapeamento!" << endl;
+	cout << "Digite 0 para parar o mapeamento!" << endl;
   cin >> parar;
 	if (parar==0){
     return 0;
