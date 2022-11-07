@@ -8,7 +8,7 @@ using std::string;
 // // entre dois valores mínimo e máximo e retorna esse valor
 
 float converteSensor(int medida, int min, int max){
-  float med = medida - min;
+  	float med = medida - min;
 	float intervalo = max - min;
 	float resultado = (med/intervalo)*100;
 
