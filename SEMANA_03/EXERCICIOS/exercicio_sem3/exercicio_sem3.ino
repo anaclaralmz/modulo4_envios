@@ -1,11 +1,15 @@
+//definição das portas de entradas e saidas
+
 #define LDR 4
+#define button1 1
+#define button2 2
+
+#define buzzer 16
 #define LED1 20
 #define LED2 48
 #define LED3 36
 #define LED4 40
-#define buzzer 16
-#define button1 1
-#define button2 2
+
 
 //vetor que armazena o numero binario
 int vBinario[4];
@@ -16,8 +20,9 @@ int vetor2[4];
 //contador inicial para o vetor2
 int cont = 0;
 
-//funções para o botao1
-  // transformar valor do LDR entre intervalo 0-15
+//Funções para o botao1 e botao2
+
+// transformar valor do LDR entre intervalo 0-15
 int valorLDR(float lux, int min, int max){
   float luxprop = lux - min;
 	float intervalo = max - min;
@@ -26,6 +31,7 @@ int valorLDR(float lux, int min, int max){
 
   return resultado;
 }
+
 // transformar valor anterior em binario,  e armazenar em vetor (cada algarismo em uma posição)
 void valorBinario(int luxNovo, int* Vetor){
   int *vet = Vetor;
@@ -45,34 +51,37 @@ void valorBinario(int luxNovo, int* Vetor){
   }
 }
 
+//função para os LEDs: quando é 1 o LED correspondente acende, e quando é 0 não acende (em relação ao vetor com o numero binario)
 void saidasLED(int Vetor[]){
   if (Vetor[0]== 1){
     digitalWrite(LED1, HIGH);
-    Serial.println("led1 acesso");
+    // Serial.println("led1 acesso");
   }
   if (Vetor[1]== 1){
     digitalWrite(LED2, HIGH);
-    Serial.println("led2 acesso");
+    // Serial.println("led2 acesso");
   }
   if (Vetor[2]== 1){
     digitalWrite(LED3, HIGH);
-    Serial.println("led3 acesso");
+    // Serial.println("led3 acesso");
   }
   if (Vetor[3]== 1){
     digitalWrite(LED4, HIGH);
-    Serial.println("led3 acesso");
+    // Serial.println("led3 acesso");
   }
   delay(1000);
-  Serial.println("ressetou");
-    //resetar LEDs
+  // Serial.println("ressetou");
+  //resetar LEDs
   digitalWrite(LED1, LOW);
   digitalWrite(LED2, LOW);
   digitalWrite(LED3, LOW);
   digitalWrite(LED4, LOW);
 }
 
-//o buzzer sempre vai apitar um som, diferente para cada combinação
+//o buzzer sempre vai apitar um som, diferente para cada combinação de binário
 void saidaBuzzer(int valueLDR){
+  
+  // som especifico pra quando o valueLDR é 0
   if (valueLDR==0){
     tone(buzzer, (600*20), 1000);
   }
@@ -81,7 +90,7 @@ void saidaBuzzer(int valueLDR){
   }
 }
 
-
+//função de setup que rodará no inicio do programa
 void setup() {
   Serial.begin(9600);
 
@@ -96,13 +105,16 @@ void setup() {
   pinMode(buzzer, OUTPUT);
 }
 
+//função que rodará repetidamente durante o programa
 void loop() {
 
+  //leitura do LDR
   float lux = analogRead(LDR);
   // Serial.println("lux");
   // Serial.println(lux);
   delay(1000);
 
+  //essas variaveis serão utilizadas para a função valorLDR
   int minimo = 0;
   int maximo = 4095;
 
@@ -124,7 +136,7 @@ void loop() {
   }
   delay(1000);
 
-  // //chamada de funções para o botão 2
+  //chamada de funções para o botão 2
   if (digitalRead(button2)==0){
     for (int i=0; i<4; i++){
       int novoLux = valorLDR(vetor2[i],minimo, maximo);
